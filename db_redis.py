@@ -14,7 +14,6 @@ from datetime import datetime
 
 
 class AutoRedis:
-
     attempt_count = 0
     error_count = 0
     max_attempts = 3
@@ -44,6 +43,24 @@ class AutoRedis:
                 logging.info(f'Reconnecting attempt number {self.attempt_count}\t[{datetime.now()}]')
                 self.check()
 
+
+class rd_conn:
+
+    def __init__(self, host, port, password):
+        self.conn = None
+        self.password = password
+        self.host = host
+        self.port = port
+
+    def __enter__(self):
+        self.conn = redis.Redis(
+            password=self.password,
+            host=self.host,
+            port=self.port)
+        return self.conn
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
 
 # r.setex('1', id_ttl, '=1')
 # r.delete("Bahamas")

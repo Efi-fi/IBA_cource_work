@@ -1,12 +1,14 @@
+import os
+from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
 
-s = Elasticsearch(cloud_id="io_optim_efi:ZXUtd2VzdC0yLmF3cy5jbG91ZC5lcy5pbyQ5ZDE0YjAxMjY3NmM0ODM0Yjk3NmM2Mjk5NGU3ZjlmNCQ1NTMyOThkZTk4Y2U0OTNkYTU3Zjg3OWUyNmU0YWZiOA==",
-    http_auth=("elastic", "I3XOzFDS7XdaCxfE5GQzK5HM"))
+
+load_dotenv()
 
 
 class es_conn:
 
-    def __init__(self, cloud_id, password):
+    def __init__(self, cloud_id=os.getenv('ES_ID'), password=os.getenv('ES_PASSWORD')):
         self.conn = None
         self.cloud_id = cloud_id
         self.password = password

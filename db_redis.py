@@ -1,52 +1,16 @@
+import os
+from dotenv import load_dotenv
 import redis
-import logging
-from datetime import datetime
 
 
-# r_host = 'ec2-54-155-193-34.eu-west-1.compute.amazonaws.com'
-# r_user = 'h'
-# r_port = '6429'
-# r_password = 'p78ebbf48e5bc9718198d3bb7816301c84fa685ccc940fc3e6ab021b3b873b723'
-# id_ttl = 10  # 30 min
-# r = redis.Redis(host=r_host,
-#                 port=r_port,
-#                 password=r_password)
-
-
-class AutoRedis:
-    attempt_count = 0
-    error_count = 0
-    max_attempts = 3
-
-    def __init__(self, host=None, port=None, password=None,
-                 socket_connect_timeout=None):
-        self.rd = redis.Redis(host=host,
-                              port=port,
-                              password=password,
-                              socket_connect_timeout=socket_connect_timeout)
-        logging.info(f'Redis preparation\t[{datetime.now()}]')
-        self.check()
-
-    def check(self):
-        if self.attempt_count > self.max_attempts:
-            self.error_count += 1
-            logging.error(f'Redis is not available, num errors {self.error_count}\t[{datetime.now()}]')
-            AutoRedis.attempt_count = 0
-        else:
-            try:
-                self.rd.ping()
-                logging.info(f'Redis is ready\t[{datetime.now()}]')
-                self.attempt_count = 0
-            except Exception as e:
-                logging.error(e)
-                self.attempt_count += 1
-                logging.info(f'Reconnecting attempt number {self.attempt_count}\t[{datetime.now()}]')
-                self.check()
+load_dotenv()
 
 
 class rd_conn:
 
-    def __init__(self, host, port, password):
+    def __init__(self, host=os.getenv('RD_HOST'),
+                 port=os.getenv('RD_PORT'),
+                 password=os.getenv('RD_PASSWORD')):
         self.conn = None
         self.password = password
         self.host = host

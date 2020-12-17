@@ -125,3 +125,4 @@ dmypy.json
 
 # My ignore
 .idea/
+experemental.py
